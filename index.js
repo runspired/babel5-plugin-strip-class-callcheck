@@ -7,7 +7,16 @@ function stripClassCallCheck(babel) {
           node.expression.callee.type === 'MemberExpression' &&
           node.expression.callee.object.name === 'babelHelpers' &&
           node.expression.callee.property.name === 'classCallCheck') {
-
+          if (path.body && path.body.length) {
+            path.body = path.body.filter(function(item) {
+              return item !== node;
+            });
+          }
+        } else if (node.expression.type === 'CallExpression' &&
+          node.expression.callee &&
+          node.expression.callee.type === 'Identifier' &&
+          node.expression.callee.name === '_classCallCheck'
+        ) {
           if (path.body && path.body.length) {
             path.body = path.body.filter(function(item) {
               return item !== node;
